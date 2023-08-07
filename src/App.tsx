@@ -3,7 +3,6 @@ import Map from './components/Map';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from './hooks';
 import { fetchGeometry } from './Redux/slices/geometrySlice';
-import { fetchRoutes } from './Redux/slices/routesSlice';
 import ButtonComponet from './components/Button';
 
 function App() {
@@ -11,9 +10,6 @@ function App() {
   const { activeRoute, routes } = useAppSelector(state => state.routes)
   const dispatch = useAppDispatch()
 
-  useEffect(() => {
-    dispatch(fetchRoutes())
-  }, [dispatch])
 
   useEffect(() => {
     if (activeRoute.points.length > 0) {

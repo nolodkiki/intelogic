@@ -2,8 +2,6 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { call, put } from 'redux-saga/effects'
 import { fetchGeometryError, fetchGeometrySuccess } from '../slices/geometrySlice';
 import { fetchGeometryApi } from '../../api/fetchGeometryApi';
-import { fetchRouteApi } from '../../api/fetchRouteApi';
-import { fetchRoutesSuccess } from '../slices/routesSlice';
 
 export function* fetchGeometrySaga(action: PayloadAction<{ lat: number, lng: number }[]>): any {
     try {
@@ -22,13 +20,3 @@ export function* fetchGeometrySaga(action: PayloadAction<{ lat: number, lng: num
     }
 }
 
-export function* fetchRouteSaga(): any {
-    try {
-        const response = yield call(fetchRouteApi)
-        const payload = yield response.json()
-        yield put(fetchRoutesSuccess(payload.data))
-    }
-    catch (error) {
-        console.error('Ошибка при получении данных:', error);
-    }
-}
