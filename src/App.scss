@@ -1,0 +1,23 @@
+.app {
+    max-width: 1440px;
+    height: 100vh;
+    margin: 0 auto;
+}
+.main {
+    display: flex;
+    height: 80vh;
+    margin-top: 40px;
+    background-color: rgba(128, 128, 128, 0.075);
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.routes {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.leaflet-container {
+    height: 100%;
+    width: 100%;
+    border-radius: 0 10px 10px 0;
+}

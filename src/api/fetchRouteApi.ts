@@ -1,3 +1,3 @@
-export const getDataApi = () => {
+export const fetchRouteApi = () => {
     return fetch('../../data.json')
 }

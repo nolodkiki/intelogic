@@ -1,48 +1,43 @@
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet'
+import { MapContainer, TileLayer } from 'react-leaflet'
+import L from "leaflet";
 import { decode } from "@googlemaps/polyline-codec";
 import 'leaflet/dist/leaflet.css'
 import { useAppSelector } from '../hooks';
+import { useEffect, useRef } from 'react';
+import Polyline from './Polyline';
+import Markers from './Markers';
 
 function Map() {
+    const { geometry, err } = useAppSelector(state => state.geometry)
+    const { activeRoute } = useAppSelector(state => state.routes)
 
-    const { geometry } = useAppSelector(state => state.counter)
+    const mapRef = useRef<L.Map | null>(null);
 
-    interface DataType {
-        geocode: number[]
-        point: string
-    }
-    const markers: DataType[] = [
-        {
-            geocode: [59.84660399, 30.29496392],
-            point: 'point 1'
-        },
-        {
-            geocode: [59.82934196, 30.42423701],
-            point: 'point 2'
-        },
-        {
-            geocode: [59.83567701, 30.38064206],
-            point: 'point 3'
-        },
-    ]
 
-    console.log(decode(geometry))
+    useEffect(() => {
+        if (geometry && activeRoute.points && mapRef.current) {
+            const polyline = decode(geometry);
+            const latlngs = polyline.map(point => (
+                L.latLng(point[0], point[1])
+            ));
+            const bounds = L.latLngBounds(latlngs.flat());
+            mapRef.current.fitBounds(bounds);
+        }
+    }, [geometry, activeRoute.points]);
 
-    const limeOptions = { color: 'black' }
 
     return (
-        <MapContainer center={[59.83567701, 30.38064206]} zoom={13}>
-            <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
-            {markers.map(marker => (
-                <Marker position={marker.geocode}>
-                    <Popup>
-                        <p>{marker.point}</p>
-                    </Popup>
-                </Marker>
-            ))}
-            <Polyline pathOptions={limeOptions} positions={decode(geometry)} />
-        </MapContainer>
+        <>
+            {err ? err : <MapContainer
+                ref={mapRef}
+                center={[54.55, 25.19]}
+                zoom={5}>
+                <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
+                <Markers activeRoute={activeRoute} />
+                <Polyline positions={decode(geometry)} />
+            </MapContainer>}
+        </>
     )
 }
 

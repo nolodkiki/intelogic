@@ -1,22 +1,23 @@
 import { configureStore } from '@reduxjs/toolkit'
 import createSagaMiddleware from "redux-saga";
-import counter, { GET_GEOMETRY, getGeometrySaga } from './slices/counterSlice'
-import data, { GET_DATA, getDataSaga } from './slices/dataSlice'
+import geometry, { FETCH_GEOMETRY } from './slices/geometrySlice'
+import routes, { FETCH_ROUTES, } from './slices/routesSlice'
 import { takeEvery } from "redux-saga/effects";
+import { fetchGeometrySaga, fetchRouteSaga } from './sagas';
 
 
 const sagaMiddleware = createSagaMiddleware()
 
 function* sagas() {
-    yield takeEvery(GET_GEOMETRY, getGeometrySaga)
-    yield takeEvery(GET_DATA, getDataSaga)
+    yield takeEvery(FETCH_GEOMETRY, fetchGeometrySaga)
+    yield takeEvery(FETCH_ROUTES, fetchRouteSaga)
 }
 
 export const store = configureStore({
     devTools: true,
     reducer: {
-        counter,
-        data
+        geometry,
+        routes
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({ thunk: false }).concat(sagaMiddleware)
